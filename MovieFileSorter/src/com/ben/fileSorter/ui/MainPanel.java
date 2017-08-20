@@ -18,19 +18,25 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.bas.versions.gui.BasJTree;
+import com.bas.versions.utils.FileList;
 import com.ben.fileSorter.FileSorter;
+
 
 /**
  * Create the panel.
@@ -111,6 +117,7 @@ public class MainPanel extends JPanel {
 	private final JCheckBox file2LowerCb = new JCheckBox("All files to lowercase");
 	private final JCheckBox folder2LowerCb = new JCheckBox("All folders to lowercase");
 	private final JCheckBox thisThatCaseCb = new JCheckBox("Case sensitive");
+	private final JPanel treePnl = new JPanel();
 
 	public MainPanel() {
 		addToNameTf.addFocusListener(new FocusAdapter() {
@@ -168,12 +175,11 @@ public class MainPanel extends JPanel {
 			}
 		});
 		panel4jfc.add(browseBut);
-		FlowLayout flowLayout_2 = (FlowLayout) panel4Options.getLayout();
-		flowLayout_2.setAlignment(FlowLayout.LEFT);
 
 		// Setup option panel
 		panel4Options.setBorder(BorderFactory.createTitledBorder("Set Options"));
-		add(panel4Options, BorderLayout.CENTER);
+		add(panel4Options, BorderLayout.WEST);
+		panel4Options.setLayout(new BoxLayout(panel4Options, BoxLayout.Y_AXIS));
 		FlowLayout flowLayout_7 = (FlowLayout) Rename.getLayout();
 		flowLayout_7.setAlignment(FlowLayout.LEFT);
 		Rename.setToolTipText(
@@ -405,6 +411,9 @@ public class MainPanel extends JPanel {
 		btnNewButton.setHorizontalTextPosition(SwingConstants.RIGHT);
 
 		panel4Launch.add(btnNewButton);
+		
+		add(treePnl, BorderLayout.CENTER);
+		treePnl.setLayout(new BorderLayout(0, 0));
 
 	}
 
@@ -419,6 +428,12 @@ public class MainPanel extends JPanel {
 		if (path2Sort != null) {
 			path2SortLabel.setText(path2Sort.toFile().getAbsolutePath());
 			btnNewButton.setEnabled(true);
+			((JFrame)SwingUtilities.getWindowAncestor(this)).setBounds(100, 100, 1050, 530);
+			treePnl.removeAll();
+			treePnl.add(new BasJTree(path2Sort, new FileList(path2Sort).getResult()), BorderLayout.CENTER);
+			treePnl.setBorder(BorderFactory.createTitledBorder(path2Sort.toFile().getAbsolutePath()));
+			this.revalidate();
+			this.repaint();
 		}
 	}
 
@@ -513,6 +528,12 @@ public class MainPanel extends JPanel {
 		jobsDone.showMessageDialog(this, MainPanel.getWarnings(), "Info", JOptionPane.INFORMATION_MESSAGE);
 		System.out.println(MainPanel.getLog());
 		MainPanel.setWarnings("Jobs Done");
+		
+		treePnl.removeAll();
+		treePnl.add(new BasJTree(path2Sort, new FileList(path2Sort).getResult()), BorderLayout.CENTER);
+		treePnl.setBorder(BorderFactory.createTitledBorder(path2Sort.toFile().getAbsolutePath()));
+		this.revalidate();
+		this.repaint();
 
 	}
 

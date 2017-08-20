@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -56,4 +57,10 @@ public class Main extends JFrame {
 		contentPane.add(mainPanel);
 	}
 
+	
+	public void resizeFrame(Dimension dim){
+		int x = (int) dim.getHeight();
+		int y = (int) dim.getWidth();
+		this.setBounds(100,100,x,y);
+	}
 }
