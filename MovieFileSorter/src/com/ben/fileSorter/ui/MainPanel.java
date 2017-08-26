@@ -28,13 +28,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.bas.versions.gui.BasJTree;
-import com.bas.versions.utils.FileList;
 import com.ben.fileSorter.FileSorter;
 
 
@@ -46,80 +43,87 @@ import com.ben.fileSorter.FileSorter;
  */
 
 @SuppressWarnings("serial")
-public class MainPanel extends JPanel {
-
-	/**
-	 * The path object the app will work with
-	 */
-	Path path2Sort = null;// Paths.get(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
-
-	/**
-	 * warnings diplayed in the post-launch() info dialog
-	 */
-	static private String warnings = new String("Job finished\n");
-
-	public static String getWarnings() {
-		return warnings;
-	}
-
-	public static void setWarnings(String warnings) {
-		MainPanel.warnings = warnings;
-	}
+public class MainPanel extends JFrame {
 
 	/**
 	 * log string to be written in the log file
 	 */
 	public static String log = new String("Ben's Amazing Sorting App v1.0\n");
 
+	/**
+	 * warnings diplayed in the post-launch() info dialog
+	 */
+	static private String warnings = new String("Job finished\n");
+
 	public static String getLog() {
 		return log;
+	}
+
+	public static String getWarnings() {
+		return warnings;
 	}
 
 	public static void setLog(String log) {
 		MainPanel.log = log;
 	}
 
-	private JFileChooser jfc = new JFileChooser();
-	private JPanel panel4jfc = new JPanel();
-	private JLabel path2SortLabel = new JLabel();
+	public static void setWarnings(String warnings) {
+		MainPanel.warnings = warnings;
+	}
+
+	private final JCheckBox addToNameCb = new JCheckBox("Add ");
+
+	private final JPanel addToNamePnl = new JPanel();
+	private final JCheckBox addToNameRecursiveCb = new JCheckBox("Recursive");
+	private final JTextField addToNameTf = new JTextField();
 	private JButton browseBut = new JButton("Browse");
-	private JPanel panel4Options = new JPanel();
-	private final JPanel panel4Launch = new JPanel();
 	private final JButton btnNewButton = new JButton("Proceed");
-	private final JCheckBox frenchSortCb = new JCheckBox("Move 'french' files in 'french' folder");
-	private JOptionPane jobsDone;
-	private final JCheckBox delSpacesCb = new JCheckBox("Replace spaces with periods");
-	private final JPanel customFolderSortPnl = new JPanel();
+	private final JPanel Clean = new JPanel();
 	private final JCheckBox customFolderSortCb = new JCheckBox("Move files in custom folder (ex. BRRip) : ");
+	private final JPanel customFolderSortPnl = new JPanel();
 	private final JTextField customFolderSortTf = new JTextField();
-	private final JCheckBox delSamplesCb = new JCheckBox("Delete Samples");
 	private final JCheckBox cutomFolderRecursiveCb = new JCheckBox("Recursive ");
-	private final JCheckBox frenchRecursiveCb = new JCheckBox("Recursive ");
-	private final JPanel frenchPanel = new JPanel();
 	private final JCheckBox delEmptyFoldersCb = new JCheckBox("Delete empty folders ");
-	private final JPanel replaceThisByThatPnl = new JPanel();
-	private final JCheckBox replaceThisByThatCb = new JCheckBox("Replace ");
-	private final JTextField thisTf = new JTextField();
+	private final JCheckBox delSamplesCb = new JCheckBox("Delete Samples");
+	private final JCheckBox delSpacesCb = new JCheckBox("Replace spaces with periods");
+	private final JCheckBox file2LowerCb = new JCheckBox("All files to lowercase");
+	private final JCheckBox folder2LowerCb = new JCheckBox("All folders to lowercase");
+	private final JPanel frenchPanel = new JPanel();
+	private final JCheckBox frenchRecursiveCb = new JCheckBox("Recursive ");
+	private final JCheckBox frenchSortCb = new JCheckBox("Move 'french' files in 'french' folder");
+	private JFileChooser jfc = new JFileChooser();
+	private JOptionPane jobsDone;
 	private final JLabel lblBy = new JLabel(" by ");
-	private final JTextField thatTf = new JTextField();
+	private final JLabel lblNewLabel = new JLabel(" prefix  of filename (ex. '3D-')");
+	private JPanel panel4jfc = new JPanel();
+	private final JPanel panel4Launch = new JPanel();
+	private JPanel panel4Options = new JPanel();
+	/**
+	 * The path object the app will work with
+	 */
+	Path path2Sort = null;// Paths.get(FileSystemView.getFileSystemView().getDefaultDirectory().getPath());
+	private JLabel path2SortLabel = new JLabel();
+	private final JPanel Rename = new JPanel();
+	private final JCheckBox replaceThisByThatCb = new JCheckBox("Replace ");
+	private final JPanel replaceThisByThatPnl = new JPanel();
 	private final JCheckBox replaceThisbyThatRecursiveCb = new JCheckBox("Recursive");
 	private final JPanel Sort = new JPanel();
-	private final JPanel Rename = new JPanel();
-	private final JPanel Clean = new JPanel();
-	private final JPanel addToNamePnl = new JPanel();
-	private final JCheckBox addToNameCb = new JCheckBox("Add ");
-	private final JTextField addToNameTf = new JTextField();
-	private final JLabel lblNewLabel = new JLabel(" prefix  of filename (ex. '3D-')");
-	private final JCheckBox addToNameRecursiveCb = new JCheckBox("Recursive");
 	private final JCheckBox sortTvCb = new JCheckBox("Move TV shows in a 'TVShows' folder");
 	private final JPanel sortTvPnl = new JPanel();
 	private final JCheckBox sortTVShowsRecursive = new JCheckBox("Recursive");
-	private final JCheckBox file2LowerCb = new JCheckBox("All files to lowercase");
-	private final JCheckBox folder2LowerCb = new JCheckBox("All folders to lowercase");
+	private final JTextField thatTf = new JTextField();
+	private final JTextField thisTf = new JTextField();
 	private final JCheckBox thisThatCaseCb = new JCheckBox("Case sensitive");
 	private final JPanel treePnl = new JPanel();
 
 	public MainPanel() {
+		
+
+        
+        this.setTitle("Ben's Amazing (Movie) File Sorter v1.0");
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		addToNameTf.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -147,7 +151,7 @@ public class MainPanel extends JPanel {
 		});
 		addToNameTf.setColumns(10);
 		addToNameTf.setTransferHandler(null);
-		setPreferredSize(new Dimension(500, 500));
+		setPreferredSize(new Dimension(1050, 550));
 
 		// Setup MainPanel
 		setLayout(new BorderLayout(0, 0));
@@ -210,6 +214,11 @@ public class MainPanel extends JPanel {
 		});
 		thisTf.addFocusListener(new FocusAdapter() {
 			@Override
+			public void focusGained(FocusEvent e) {
+				replaceThisByThatCb.setSelected(true);
+			}
+
+			@Override
 			public void focusLost(FocusEvent arg0) {
 				if (thisTf.getText().length() != 0) {
 					replaceThisByThatCb.setSelected(true);
@@ -217,11 +226,6 @@ public class MainPanel extends JPanel {
 				if (thisTf.getText().length() == 0) {
 					replaceThisByThatCb.setSelected(false);
 				}
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				replaceThisByThatCb.setSelected(true);
 			}
 		});
 		file2LowerCb.setToolTipText("<html>\r\n<p>Enable/Disable the AllFilesToLowerCase option</p>\r\n<p>recusively changes filesnames to all-lowercase</p>\r\n</html>");
@@ -321,6 +325,11 @@ public class MainPanel extends JPanel {
 				"<html>\r\n<p>Enable/Disable the custom folder sort option</p>\r\n<p>Type in a cutom category you want the program to use to create a custom folder and sort every folder, movie, subtitles etc... in that folder.</p>\r\n<p>It is possible to type multiple custom category, they must be separated with ',' (Ex. DvdRip,BRRip,Porn,3d). Multiple folders will be created.</p>\r\n<p>You can't paste text in this field or type in '/' and '\\', that's for your own good</p>\r\n</html>");
 		customFolderSortTf.addFocusListener(new FocusAdapter() {
 			@Override
+			public void focusGained(FocusEvent e) {
+				customFolderSortCb.setSelected(true);
+			}
+
+			@Override
 			public void focusLost(FocusEvent arg0) {
 				if (customFolderSortTf.getText().length() != 0) {
 					customFolderSortCb.setSelected(true);
@@ -328,11 +337,6 @@ public class MainPanel extends JPanel {
 				if (customFolderSortTf.getText().length() == 0) {
 					customFolderSortCb.setSelected(false);
 				}
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				customFolderSortCb.setSelected(true);
 			}
 		});
 
@@ -415,6 +419,10 @@ public class MainPanel extends JPanel {
 		add(treePnl, BorderLayout.CENTER);
 		treePnl.setLayout(new BorderLayout(0, 0));
 
+		path2Sort = Paths.get(System.getProperty("user.dir"));
+		initPanel();
+		
+
 	}
 
 	/**
@@ -425,15 +433,31 @@ public class MainPanel extends JPanel {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			this.path2Sort = Paths.get(jfc.getSelectedFile().getAbsolutePath());
 		}
+		initPanel();
+		pack();
+	}
+
+	/**
+	 * @param path2Sort the path2Sort to set
+	 */
+	public void setPath2Sort(Path path2Sort) {
+		this.path2Sort = path2Sort;
+	}
+
+	/**
+	 * 
+	 */
+	public void initPanel() {
 		if (path2Sort != null) {
 			path2SortLabel.setText(path2Sort.toFile().getAbsolutePath());
 			btnNewButton.setEnabled(true);
-			((JFrame)SwingUtilities.getWindowAncestor(this)).setBounds(100, 100, 1050, 530);
 			treePnl.removeAll();
-			treePnl.add(new BasJTree(path2Sort, new FileList(path2Sort).getResult()), BorderLayout.CENTER);
+			treePnl.add(new customTree(path2Sort), BorderLayout.CENTER);
 			treePnl.setBorder(BorderFactory.createTitledBorder(path2Sort.toFile().getAbsolutePath()));
-			this.revalidate();
-			this.repaint();
+			revalidate();
+			repaint();
+			pack();
+
 		}
 	}
 
@@ -530,7 +554,7 @@ public class MainPanel extends JPanel {
 		MainPanel.setWarnings("Jobs Done");
 		
 		treePnl.removeAll();
-		treePnl.add(new BasJTree(path2Sort, new FileList(path2Sort).getResult()), BorderLayout.CENTER);
+		treePnl.add(new customTree(path2Sort), BorderLayout.CENTER);
 		treePnl.setBorder(BorderFactory.createTitledBorder(path2Sort.toFile().getAbsolutePath()));
 		this.revalidate();
 		this.repaint();
